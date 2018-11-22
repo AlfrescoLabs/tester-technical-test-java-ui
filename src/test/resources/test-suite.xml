@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestersTestSuite" preserve-order="true">
+    <test name="Test">
+        <packages>
+            <package name="org.alfresco.*"/>
+        </packages>
+    </test>
+</suite>
