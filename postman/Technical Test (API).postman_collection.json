@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "d23accaa-2c1a-4044-b7de-6afd78c3e473",
+		"name": "Technical Test (API)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List people as admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e12518ac-dd89-41cf-bc97-2e00206ce839",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has JSON body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/people?skipCount=0&maxItems=100",
+					"host": [
+						"{{acsUrl}}"
+					],
+					"path": [
+						"api",
+						"-default-",
+						"public",
+						"alfresco",
+						"versions",
+						"1",
+						"people"
+					],
+					"query": [
+						{
+							"key": "skipCount",
+							"value": "0"
+						},
+						{
+							"key": "maxItems",
+							"value": "100"
+						}
+					]
+				},
+				"description": "This request will validate whether the repo is set up correctly "
+			},
+			"response": []
+		},
+		{
+			"name": "Create test user as admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e12518ac-dd89-41cf-bc97-2e00206ce839",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Response has JSON body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    pm.expect(\"entry\" in jsonData).to.be.true;",
+							"});",
+							"",
+							"var entry = jsonData.entry;",
+							"pm.test(\"User has valid properties\", function() {",
+							"    pm.expect(\"id\" in entry).to.be.true;",
+							"    pm.expect(entry.id).to.equal(pm.variables.get(\"testUserUsername\"));",
+							"    ",
+							"    pm.expect(\"firstName\" in entry).to.be.true;",
+							"    pm.expect(entry.firstName).to.equal(pm.variables.get(\"testUserFirstName\"));",
+							"    ",
+							"    pm.expect(\"lastName\" in entry).to.be.true;",
+							"    pm.expect(entry.lastName).to.equal(pm.variables.get(\"testUserLastName\"));",
+							"    ",
+							"    pm.expect(\"email\" in entry).to.be.true;",
+							"    pm.expect(entry.email).to.equal(pm.variables.get(\"testUserEmail\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"{{testUserUsername}}\",\n  \"password\": \"{{testUserPassword}}\",\n  \"firstName\": \"{{testUserFirstName}}\",\n  \"lastName\": \"{{testUserLastName}}\",\n  \"description\": \"{{testUserFirstName}} {{testUserLastName}}\",\n  \"email\": \"{{testUserEmail}}\",\n  \"enabled\": true,\n  \"emailNotificationsEnabled\": true\n}"
+				},
+				"url": {
+					"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/people",
+					"host": [
+						"{{acsUrl}}"
+					],
+					"path": [
+						"api",
+						"-default-",
+						"public",
+						"alfresco",
+						"versions",
+						"1",
+						"people"
+					]
+				},
+				"description": "This request will validate whether the repo is set up correctly "
+			},
+			"response": []
+		},
+		{
+			"name": "List content as test user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e12518ac-dd89-41cf-bc97-2e00206ce839",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has JSON body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{testUserPassword}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{testUserUsername}}",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
+					"host": [
+						"{{acsUrl}}"
+					],
+					"path": [
+						"api",
+						"-default-",
+						"public",
+						"alfresco",
+						"versions",
+						"1",
+						"nodes",
+						"-my-",
+						"children"
+					]
+				},
+				"description": "This request will validate whether the repo is set up correctly "
+			},
+			"response": []
+		},
+		{
+			"name": "Create file as test user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6999b794-4487-4081-bb73-f87efdb8c75c",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Created content has test user metadata\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var userName = jsonData.entry.createdByUser.id;",
+							"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fe4b8b6-b2cd-47a5-b4bd-b4c2074dab33",
+						"exec": [
+							"// generate random file so that subsequent requests don't fail with \"duplicate content\" exception",
+							"var uuid = require(\"uuid\");",
+							"var filename = uuid.v4() + \".txt\";",
+							"",
+							"var body = JSON.stringify({",
+							"  \"name\": filename,",
+							"  \"nodeType\":\"cm:content\"",
+							"});",
+							"",
+							"pm.environment.set(\"contentCreateBody\", body);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{testUserPassword}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{testUserUsername}}",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{contentCreateBody}}"
+				},
+				"url": {
+					"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
+					"host": [
+						"{{acsUrl}}"
+					],
+					"path": [
+						"api",
+						"-default-",
+						"public",
+						"alfresco",
+						"versions",
+						"1",
+						"nodes",
+						"-my-",
+						"children"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "031febcf-2576-4f53-9fe9-9f1de533db75",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "352ee2ed-45b5-44b8-a272-4273607ad596",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "b494891e-ff25-431f-b409-175f3365de40",
+			"key": "acsUrl",
+			"value": "{{dbpurl}}/alfresco",
+			"type": "string"
+		},
+		{
+			"id": "bb324f75-f5f3-4983-8c05-5bc0271e6239",
+			"key": "testUserUsername",
+			"value": "testuser",
+			"type": "string"
+		},
+		{
+			"id": "5ff5cc7b-dd03-42e2-b637-a74284dcb2b5",
+			"key": "testUserPassword",
+			"value": "password",
+			"type": "string"
+		},
+		{
+			"id": "7ba56f00-e077-4d0c-a9a5-62ed8b9cc229",
+			"key": "testUserEmail",
+			"value": "test@user.com",
+			"type": "string"
+		},
+		{
+			"id": "c383f63f-1060-4b13-8efa-64aa7d2100d9",
+			"key": "testUserFirstName",
+			"value": "Test",
+			"type": "string"
+		},
+		{
+			"id": "598b1a05-48f5-4da2-bf6c-73090efc8f22",
+			"key": "testUserLastName",
+			"value": "User",
+			"type": "string"
+		}
+	]
+}
